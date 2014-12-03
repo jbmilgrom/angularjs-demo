@@ -13,11 +13,11 @@
 
     // note: unlike with other JS functions, the order of the 'parameters'
     // does not matter
-    myApp.controller("dayCtrl", function($scope){
-      var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    myApp.controller("dayCtrl", function($scope, days){
+      // var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-      $scope.day        = dayNames[new Date().getDay()];
-      $scope.tomorrow   = dayNames[(new Date().getDay() + 1) % 7];
+      $scope.day        = days.today;
+      $scope.tomorrow   = days.tomorrow;
 
     });
 
@@ -46,15 +46,11 @@
     });
 
     myApp.service("days", function(){
-      // return function()
-    })
-    // myApp.directive("highlight", function(){
-    //   return function(scope, element, attrs) {
-    //     if (scope.day == attrs["highlight"]) {
-    //       element.css("color", "red");
-    //     }
-    //   };
-    // });
+      var now = new Date();
+      this.today = now.getDay();
+      this.tomorrow = (this.today + 1) % 7;
+    });
+
   </script>	
   <body>
     <div class="container">
@@ -62,8 +58,8 @@
         <div class="page-header">
           <h1>AngularJS Example App</h1>
         </div>
-        <h3>Today is {{day || "unknown"}}</h3>
-        <h3>Tomorrow is {{tomorrow || "unknown"}}</h3>
+        <h3>Today is {{day || "unknown" | dayName}}</h3>
+        <h3>Tomorrow is {{tomorrow || "unknown" | dayName}}</h3>
       </div>
 <!--       <div class="panel" ng-controller="weekCtrl">
         <h2>The Coming Week: </h2>
