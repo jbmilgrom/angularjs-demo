@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Angular JS Demo - Modularity</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+  <script>
+    // convention to use the suffix 'App' with top level modules 
+    // that are associated with an HTML document
+    // i.e. modules that are not purposed for organization
+    var myApp = angular.module("exampleApp", []);
+
+    // note: unlike with other JS functions, the order of the 'parameters'
+    // does not matter
+    myApp.controller("dayCtrl", function($scope){
+      var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+      $scope.day        = dayNames[new Date().getDay()];
+      $scope.tomorrow   = dayNames[(new Date().getDay() + 1) % 7];
+
+    });
+
+
+    // myApp.controller("weekCtrl", function($scope){
+    //   var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    //   $scope.comingWeek = comingWeek();
+
+    //   function comingWeek(){
+    //     result = [];
+    //     for (var i = 0; i < dayNames.length; i++) {
+    //       result.push(dayNames[(new Date().getDay() + i) % 7]);
+    //     }
+    //     return result;
+    //   }
+
+    // });
+
+    myApp.filter("dayName", function(){
+      var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+      return function(input){
+        return angular.isNumber(input) ? dayNames[input] : input;
+      };
+    });
+
+    myApp.service("days", function(){
+      // return function()
+    })
+    // myApp.directive("highlight", function(){
+    //   return function(scope, element, attrs) {
+    //     if (scope.day == attrs["highlight"]) {
+    //       element.css("color", "red");
+    //     }
+    //   };
+    // });
+  </script>	
+  <body>
+    <div class="container">
+      <div class="panel" ng-controller="dayCtrl">
+        <div class="page-header">
+          <h1>AngularJS Example App</h1>
+        </div>
+        <h3>Today is {{day || "unknown"}}</h3>
+        <h3>Tomorrow is {{tomorrow || "unknown"}}</h3>
+      </div>
+<!--       <div class="panel" ng-controller="weekCtrl">
+        <h2>The Coming Week: </h2>
+        <div ng-repeat="day in comingWeek">
+          <h3>{{day}}</h3>
+        </div>        
+      </div> -->
+    </div>
+  </body>
+</head>
+</html>
