@@ -5,49 +5,49 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-  <script type="text/javascript" src="controller"></script>
-  <script type="text/javascript" src="services"></script>
+
   <script>
     // convention to use the suffix 'App' with top level modules 
     // that are associated with an HTML document
     // i.e. modules that are not purposed for organization
-    var myApp = angular.module("exampleApp", [controllerModule]);
+    var myApp = angular.module("exampleApp", []);
 
-    var controllerModule = angular.module("controllerModule", []);
+    // var controllerModule = angular.module("controllerModule", []);
     // .controller
     // .controller;
 
     // note: unlike with other JS functions, the order of the 'parameters'
     // does not matter
-    myApp.controller("dayCtrl", function(days, $scope){
+    myApp
 
-
-      // $scope.day        = days.today;
-      // $scope.tomorrow   = days.tomorrow;
-
-      $scope.day      = new Date().getDay();
-
-    }).
-    controller("secCtrl", function($scope){
-      $scope.tomorrow = (new Date().getDay() + 1) % 7;
-
+    .controller("dayCtrl", function($scope, days){
+      $scope.today      = days.today;
+    })
+    
+    .controller("secCtrl", function($scope, days){
+      $scope.tomorrow   = days.nextDay(1);
     });
 
 
-    // myApp.controller("weekCtrl", function($scope){
-    //   var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    myApp.controller("weekCtrl", function($scope, days){
+      $scope.comingWeek = comingWeek();      
+      $scope.set        = function(day){
+        $scope.today = day;
+        $scope.tomorrow = (day + 1) % 7
+      };
 
-    //   $scope.comingWeek = comingWeek();
+      function comingWeek(){
+        var daysInWeek = 7;
+        var result     = [];
 
-    //   function comingWeek(){
-    //     result = [];
-    //     for (var i = 0; i < dayNames.length; i++) {
-    //       result.push(dayNames[(new Date().getDay() + i) % 7]);
-    //     }
-    //     return result;
-    //   }
+        for (var i = 0; i < daysInWeek; i++) {
+          result.push(days.nextDay(i));
+        }
 
-    // });
+        return result;
+      }
+
+    });
 
     myApp.filter("dayName", function(){
       var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -58,27 +58,36 @@
     });
 
     myApp.service("days", function(){
-      var now = new Date();
-      this.today = now.getDay();
-      this.tomorrow = (this.today + 1) % 7;
+      var now       = new Date();
+
+      this.today    = now.getDay();
+      this.nextDay  = function(i){ return (this.today + i) % 7; };
     });
 
   </script>	
-  <body>
-    <div class="container">
-      <div class="panel">
-        <div class="page-header">
-          <h1>AngularJS Example App</h1>
+  <body ng-controller="weekCtrl">
+    <div class="col-xs-4">
+      <div class="container">
+        <div class="panel">
+          <div class="page-header">
+            <h1>Side Bar</h1>
+          </div>
+          <div ng-repeat="day in comingWeek">
+            <div class="btn btn-primary" ng-click="set(day)">{{ (day | dayName) || "Unknown" }}</div>
+          </div>
         </div>
-        <h3 ng-controller="dayCtrl">Today is {{day || "unknown" | dayName}}</h3>
-        <h3 ng-controller="secCtrl">Tomorrow is {{tomorrow || "unknown"| dayName}}</h3>
+      </div>         
+    </div>
+    <div class="col-xs-8">
+      <div class="container">
+        <div class="panel">
+          <div class="page-header">
+            <h1>Content</h1>
+          </div>
+          <h3 ng-controller="dayCtrl">Today is {{ (today | dayName) || "Unknown" }}</h3>
+          <h3 ng-controller="secCtrl">Tomorrow is {{ (tomorrow | dayName) || "Unknown" }}</h3>
+        </div>
       </div>
-<!--       <div class="panel" ng-controller="weekCtrl">
-        <h2>The Coming Week: </h2>
-        <div ng-repeat="day in comingWeek">
-          <h3>{{day}}</h3>
-        </div>        
-      </div> -->
     </div>
   </body>
 </head>
