@@ -67,26 +67,22 @@
   </script>	
   <body ng-controller="weekCtrl">
     <div class="col-xs-4">
-      <div class="container">
-        <div class="panel">
-          <div class="page-header">
-            <h1>Side Bar</h1>
-          </div>
-          <div ng-repeat="day in comingWeek">
-            <div class="btn btn-primary" ng-click="set(day)">{{ (day | dayName) || "Unknown" }}</div>
-          </div>
+      <div class="panel">
+        <div class="page-header">
+          <h1>Side Bar</h1>
         </div>
-      </div>         
+        <div ng-repeat="day in comingWeek">
+          <div class="btn btn-primary" ng-click="set(day)">{{ (day | dayName) || "Unknown" }}</div>
+        </div>
+      </div>
     </div>
     <div class="col-xs-8">
-      <div class="container">
-        <div class="panel">
-          <div class="page-header">
-            <h1>Content</h1>
-          </div>
-          <h3 ng-controller="dayCtrl">Today is {{ (today | dayName) || "Unknown" }}</h3>
-          <h3 ng-controller="secCtrl">Tomorrow is {{ (tomorrow | dayName) || "Unknown" }}</h3>
+      <div class="panel">
+        <div class="page-header">
+          <h1>Content</h1>
         </div>
+        <h3 ng-controller="dayCtrl">Today is {{ (today | dayName) || "Unknown" }}</h3>
+        <h3 ng-controller="secCtrl">Tomorrow is {{ (tomorrow | dayName) || "Unknown" }}</h3>
       </div>
     </div>
   </body>
